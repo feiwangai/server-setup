@@ -37,7 +37,7 @@ echo "⬆️ Upgrading system packages..."
 apt upgrade -y
 
 echo "🛠️ Installing essential packages..."
-apt install -y git curl zsh build-essential libssl-dev zlib1g-dev \
+sudo apt install -y git curl zsh build-essential libssl-dev zlib1g-dev \
 libbz2-dev libreadline-dev libsqlite3-dev libncursesw5-dev \
 xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
 software-properties-common apt-transport-https ca-certificates \
