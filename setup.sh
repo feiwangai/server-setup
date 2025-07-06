@@ -51,7 +51,7 @@
   git config --global user.email "feiwang.ai@gmail.com"
 
   echo "🔑 Generating SSH key..."
-  ssh-keygen -t ed25519 -C "fei.wang@iu.org" -f /root/.ssh/id_ed25519 -N ""
+  ssh-keygen -t ed25519 -C "feiwang.ai@gmail.com" -f /root/.ssh/id_ed25519 -N ""
 
   echo "🐚 Installing Oh My Zsh..."
   RUNZSH=no CHSH=no sh -c "$(curl -fsSL
