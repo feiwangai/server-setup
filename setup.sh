@@ -1,89 +1,94 @@
-  #!/bin/bash
+#!/bin/bash
 
-  # Set non-interactive mode to avoid prompts
-  export DEBIAN_FRONTEND=noninteractive
-  export NEEDRESTART_MODE=a
+# Set non-interactive mode to avoid prompts
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
 
-  echo "🚀 Starting server setup..."
+echo "🚀 Starting server setup..."
 
-  # Function to wait for apt lock to be released
-  wait_for_apt() {
-      while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
-          echo "⏳ Waiting for other apt processes to finish..."
-          sleep 5
-      done
-  }
+# Function to wait for apt lock to be released
+wait_for_apt() {
+    while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+        echo "⏳ Waiting for other apt processes to finish..."
+        sleep 5
+    done
+}
 
-  # Kill any stuck apt processes
-  echo "🔧 Cleaning up any stuck processes..."
-  sudo killall -9 apt 2>/dev/null || true
-  sudo killall -9 dpkg 2>/dev/null || true
+# Kill any stuck apt processes
+echo "🔧 Cleaning up any stuck processes..."
+sudo killall -9 apt 2>/dev/null || true
+sudo killall -9 dpkg 2>/dev/null || true
 
-  # Remove lock files if they exist
-  sudo rm -f /var/lib/dpkg/lock-frontend
-  sudo rm -f /var/lib/dpkg/lock
-  sudo rm -f /var/cache/apt/archives/lock
+# Remove lock files if they exist
+sudo rm -f /var/lib/dpkg/lock-frontend
+sudo rm -f /var/lib/dpkg/lock
+sudo rm -f /var/cache/apt/archives/lock
 
-  # Clean up any interrupted package installations
-  sudo dpkg --configure -a
+# Clean up any interrupted package installations
+sudo dpkg --configure -a
 
-  # Wait for any remaining processes
-  wait_for_apt
+# Wait for any remaining processes
+wait_for_apt
 
-  echo "📦 Updating package lists..."
-  apt update
+echo "📦 Updating package lists..."
+apt update
 
-  echo "⬆️ Upgrading system packages..."
-  apt upgrade -y
+echo "⬆️ Upgrading system packages..."
+apt upgrade -y
 
-  echo "🛠️ Installing essential packages..."
-  apt install -y git curl zsh build-essential libssl-dev zlib1g-dev \
-  libbz2-dev libreadline-dev libsqlite3-dev libncursesw5-dev \
-  xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
-  software-properties-common apt-transport-https ca-certificates \
-  gnupg lsb-release
+echo "🛠️ Installing essential packages..."
+apt install -y git curl zsh build-essential libssl-dev zlib1g-dev \
+libbz2-dev libreadline-dev libsqlite3-dev libncursesw5-dev \
+xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+software-properties-common apt-transport-https ca-certificates \
+gnupg lsb-release
 
-  echo "🐍 Installing UV (Python package manager)..."
-  curl -LsSf https://astral.sh/uv/install.sh | sh
+echo "🐍 Installing UV (Python package manager)..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-  echo "⚙️ Setting up Git configuration..."
-  git config --global user.name "Fei Wang"
-  git config --global user.email "feiwang.ai@gmail.com"
+echo "⚙️ Setting up Git configuration..."
+git config --global user.name "Fei Wang"
+git config --global user.email "feiwang.ai@gmail.com"
 
-  echo "🔑 Generating SSH key..."
-  ssh-keygen -t ed25519 -C "feiwang.ai@gmail.com" -f /root/.ssh/id_ed25519 -N ""
+echo "🔑 Generating SSH key..."
+ssh-keygen -t ed25519 -C "feiwang.ai@gmail.com" -f /root/.ssh/id_ed25519 -N ""
 
-  echo "🐚 Installing Oh My Zsh..."
-  RUNZSH=no CHSH=no sh -c "$(curl -fsSL
-  https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+echo "🐚 Installing Oh My Zsh..."
+# Install Zsh
+sudo apt install zsh -y
 
-  echo "🔧 Setting default shell to zsh..."
-  chsh -s $(which zsh)
+# Install Oh My Zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-  echo "📝 Creating setup completion marker..."
-  cat > /root/setup_complete.txt << EOF
-  === SERVER SETUP COMPLETE ===
-  Completed at: $(date)
+echo "Git, Zsh, Oh My Zsh, all development packages, UV installation complete!"
 
-  SSH Public Key (add this to GitHub):
-  $(cat /root/.ssh/id_ed25519.pub)
+echo "🔧 Setting default shell to zsh..."
+chsh -s $(which zsh)
 
-  Installed packages:
-  - Git, Zsh, Oh My Zsh
-  - Python development tools
-  - UV package manager
-  - Build essentials
+echo "📝 Creating setup completion marker..."
+cat > /root/setup_complete.txt << EOF
+=== SERVER SETUP COMPLETE ===
+Completed at: $(date)
 
-  Next steps:
-  1. Copy the SSH key above to GitHub
-  2. Test: ssh -T git@github.com
-  3. Clone your repositories
+SSH Public Key (add this to GitHub):
+$(cat /root/.ssh/id_ed25519.pub)
 
-  EOF
+Installed packages:
+- Git, Zsh, Oh My Zsh
+- Python development tools
+- UV package manager
+- Build essentials
 
-  echo "✅ Setup complete! Check /root/setup_complete.txt for details."
-  echo ""
-  echo "🔑 Your SSH public key:"
-  cat /root/.ssh/id_ed25519.pub
-  echo ""
-  echo "📋 Copy this key to GitHub and you're ready to go!"
+Next steps:
+1. Copy the SSH key above to GitHub
+2. Test: ssh -T git@github.com
+3. Clone your repositories
+
+EOF
+
+echo "✅ Setup complete! Check /root/setup_complete.txt for details."
+echo ""
+echo "🔑 Your SSH public key:"
+cat /root/.ssh/id_ed25519.pub
+echo ""
+echo "📋 Copy this key to GitHub and you're ready to go!"
