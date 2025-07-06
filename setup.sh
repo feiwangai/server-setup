@@ -1,6 +1,8 @@
   #!/bin/bash
 
   # Update system
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
   apt update && apt upgrade -y
 
   # Install essential packages
