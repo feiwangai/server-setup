@@ -46,13 +46,6 @@ gnupg lsb-release
 echo "🐍 Installing UV (Python package manager)..."
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-echo "⚙️ Setting up Git configuration..."
-git config --global user.name "Fei Wang"
-git config --global user.email "feiwang.ai@gmail.com"
-
-echo "🔑 Generating SSH key..."
-ssh-keygen -t ed25519 -C "feiwang.ai@gmail.com" -f /root/.ssh/id_ed25519 -N ""
-
 echo "🐚 Installing Oh My Zsh..."
 # Install Zsh
 sudo apt install zsh -y
@@ -64,6 +57,13 @@ echo "Git, Zsh, Oh My Zsh, all development packages, UV installation complete!"
 
 echo "🔧 Setting default shell to zsh..."
 chsh -s $(which zsh)
+
+echo "⚙️ Setting up Git configuration..."
+git config --global user.name "Fei Wang"
+git config --global user.email "feiwang.ai@gmail.com"
+
+echo "🔑 Generating SSH key..."
+ssh-keygen -t ed25519 -C "feiwang.ai@gmail.com" -f /root/.ssh/id_ed25519 -N ""
 
 echo "📝 Creating setup completion marker..."
 cat > /root/setup_complete.txt << EOF
