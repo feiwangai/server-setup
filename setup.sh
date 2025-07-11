@@ -100,6 +100,11 @@ git config --global user.email "feiwang.ai@gmail.com"
 echo "🔑 Generating SSH key..."
 ssh-keygen -t ed25519 -C "feiwang.ai@gmail.com" -f /root/.ssh/id_ed25519 -N ""
 
+echo "📁 Creating project directories..."
+mkdir -p /root/projects/active
+mkdir -p /root/projects/archive
+echo "Project directories created: /root/projects/active and /root/projects/archive"
+
 echo "📝 Creating setup completion marker..."
 cat > /root/setup_complete.txt << EOF
 === SERVER SETUP COMPLETE ===
@@ -115,6 +120,11 @@ Installed packages:
 - Monitoring tools (htop, iotop, nethogs, iftop, ncdu, tmux)
 - Node.js v22 (via nvm)
 - AWS CLI v2
+
+Project structure created:
+- /root/projects/active/   (for current projects)
+- /root/projects/archive/  (for completed projects)
+
 Next steps:
 1. Copy the SSH key above to GitHub
 2. Test: ssh -T git@github.com
