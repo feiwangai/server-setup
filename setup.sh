@@ -61,9 +61,17 @@ sudo apt install -y \
 echo "📊 Installing monitoring tools..."
 sudo apt install -y htop iotop nethogs iftop ncdu tmux
 
+echo "☁️ Installing AWS CLI..."
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo apt install -y unzip
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf awscliv2.zip aws/
+# Verify installation
+aws --version
+
 echo "🐍 Installing UV (Python package manager)..."
 curl -LsSf https://astral.sh/uv/install.sh | sh
-source ~/.bashrc  # <- Add this line
 
 # Download and install nvm:
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
@@ -106,10 +114,12 @@ Installed packages:
 - Playwright dependencies
 - Monitoring tools (htop, iotop, nethogs, iftop, ncdu, tmux)
 - Node.js v22 (via nvm)
+- AWS CLI v2
 Next steps:
 1. Copy the SSH key above to GitHub
 2. Test: ssh -T git@github.com
 3. Clone your repositories
+4. Configure AWS CLI: aws configure
 EOF
 echo "✅ Setup complete! Check /root/setup_complete.txt for details."
 echo ""
