@@ -34,8 +34,10 @@ xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
 software-properties-common apt-transport-https ca-certificates \
 gnupg lsb-release
 
-echo "🌐 Installing Playwright dependencies..."
-# Install dependencies for headless Chrome
+echo "🌐 Installing Playwright/Browser Automation dependencies..."
+echo "⚠️  CRITICAL: Without these, Playwright scrapers will process batches but collect 0 data!"
+# Install ALL dependencies for headless Chrome/Chromium
+# Missing even one of these will cause "BrowserType.launch: Host system is missing dependencies" errors
 sudo apt install -y \
     libnss3 \
     libnspr4 \
@@ -56,7 +58,26 @@ sudo apt install -y \
     libxkbcommon0 \
     libpango-1.0-0 \
     libcairo2 \
-    libasound2
+    libasound2 \
+    libxkbcommon-x11-0 \
+    libgtk-3-0 \
+    libgdk-pixbuf2.0-0 \
+    fonts-liberation \
+    libvulkan1 \
+    xvfb
+
+# Additional dependencies that playwright install-deps would add
+sudo apt install -y \
+    libglib2.0-0 \
+    libxshmfence1 \
+    libglvnd0 \
+    libglx0 \
+    libgl1 \
+    libegl1 \
+    libgles2 \
+    libicu74 \
+    libwebp7 \
+    libharfbuzz0b
 
 echo "📊 Installing monitoring tools..."
 sudo apt install -y htop iotop nethogs iftop ncdu tmux
@@ -105,6 +126,19 @@ mkdir -p /root/projects/active
 mkdir -p /root/projects/archive
 echo "Project directories created: /root/projects/active and /root/projects/archive"
 
+echo "🎭 Installing Playwright browsers (optional - for testing)..."
+echo "Note: This is optional. Workers will install browsers when needed."
+# Create a temporary Python environment to install playwright
+cd /tmp
+/root/.local/bin/uv venv temp-env
+source temp-env/bin/activate
+/root/.local/bin/uv pip install playwright
+# Install browsers (this downloads Chromium, Firefox, WebKit)
+playwright install chromium
+deactivate
+rm -rf temp-env
+echo "Playwright browsers installed for testing purposes"
+
 echo "📝 Creating setup completion marker..."
 cat > /root/setup_complete.txt << EOF
 === SERVER SETUP COMPLETE ===
@@ -116,7 +150,9 @@ Installed packages:
 - Python development tools
 - UV package manager
 - Build essentials
-- Playwright dependencies
+- Playwright/Browser Automation dependencies (COMPLETE SET)
+  ⚠️  All system deps installed - no need for 'playwright install-deps'
+- Playwright Chromium browser (for testing)
 - Monitoring tools (htop, iotop, nethogs, iftop, ncdu, tmux)
 - Node.js v22 (via nvm)
 - AWS CLI v2
