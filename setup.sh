@@ -94,6 +94,8 @@ aws --version
 echo "🐍 Installing UV (Python package manager)..."
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+source $HOME/.local/bin/env
+
 # Download and install nvm:
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 # in lieu of restarting the shell
